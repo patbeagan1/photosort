@@ -1,13 +1,5 @@
-import numpy as np
-import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-import math
-import exifread
-import argparse
-import glob
-import json
 import os
-import sys
 
 
 class Photo:
@@ -70,14 +62,12 @@ class Photo:
         Reads the image, performs rotation, and downsamples.
         """
 
-        #----------------------------------------------------------------------
         # read image
 
         f = self._filename
 
         data = mpimg.imread(f)
 
-        #----------------------------------------------------------------------
         # downsample
 
         # the point of downsampling is so the images can be redrawn by the
