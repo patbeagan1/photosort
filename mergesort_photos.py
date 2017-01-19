@@ -7,12 +7,7 @@ import glob
 import json
 import os
 import sys
-import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
 import math
-import exifread
-
 
 
 _photos = []
@@ -72,20 +67,12 @@ def rank_photos(alist):
             k = k + 1
     print("Merging ", alist)
 
-# alist = [54, 26, 93, 17, 77, 31, 44, 55, 20]
-# mergeSort(alist)
-# print(alist)
-
-
 def compare_photo(photo_a, photo_b):
-    # match_up = j / 2
+
     global remaining
     title = remaining
     remaining -= 1
-    # title = 'Round %d / %d, Match Up %d / %d' % (
-    #     i + 1, n_iterations,
-    #     match_up + 1,
-    #     n_matchups)
+
     if not isinstance(photo_a, Photo):
         return False
     if not isinstance(photo_b, Photo):
@@ -106,33 +93,13 @@ def compare_photo(photo_a, photo_b):
 def main():
 
     description = """\
-Uses the Elo ranking algorithm to sort your images by rank.  The program globs
-for .jpg images to present to you in random order, then you select the better
-photo.  After n-rounds, the results are reported.
+Uses the mergesort algorithm to sort your images by rank.  
 
 Click on the "Select" button or press the LEFT or RIGHT arrow to pick the
 better photo.
 
 """
     parser = argparse.ArgumentParser(description=description)
-
-    # parser.add_argument(
-    #     "-r",
-    #     "--n-rounds",
-    #     type=int,
-    #     default=3,
-    #     help="Specifies the number of rounds to pass through the photo set (3)"
-    # )
-
-    # parser.add_argument(
-    #     "-f",
-    #     "--figsize",
-    #     nargs=2,
-    #     type=int,
-    #     default=[20, 12],
-    #     help="Specifies width and height of the Matplotlib figsize (20, 12)"
-    # )
-
     parser.add_argument(
         "photo_dir",
         help="The photo directory to scan for .jpg images"
@@ -146,10 +113,6 @@ better photo.
 
     ranking_table_json = 'ranking_table.json'
     ranked_txt = 'ranked.txt'
-
-    # Create the ranking table and add photos to it.
-    #--------------------------------------------------------------------------
-    # Read in table .json if present
 
     sys.stdout.write("Reading in photos and downsampling ...")
     sys.stdout.flush()
@@ -166,7 +129,6 @@ better photo.
 
             add_photo(photo)
 
-    #--------------------------------------------------------------------------
     # glob for files, to include newly added files
     filelist = []
     validImages = ['jpg', 'png', 'jpeg', 'gif']
@@ -180,46 +142,30 @@ better photo.
     remaining = int(math.floor(len(filelist) * math.log(len(filelist), 2)))
     print(remaining)
     print(" done!")
-    #--------------------------------------------------------------------------
-    # Rank the photos!
 
+    # Rank the photos!
     rank_photos(_photos)
 
-    #--------------------------------------------------------------------------
     # save the table
-
     # with open(ranking_table_json, 'w') as fd:
-
     #     d = table.to_dict()
-
     #     jstr = json.dumps(d, indent=4, separators=(',', ' : '))
-
     #     fd.write(jstr)
 
-    #--------------------------------------------------------------------------
     # dump ranked list to disk
 
     with open(ranked_txt, 'w') as fd:
-
         ranked_list = _photos
-
         heading_fmt = "%4d    %s\n"
-
         heading = "\n\nRank    Filename\n"
-
         fd.write(heading)
-
         for i, photo in enumerate(ranked_list):
-
             line = heading_fmt % (
                 i + 1,
                 photo)
-
             fd.write(line)
 
-    #--------------------------------------------------------------------------
     # dump ranked list to screen
-
     print "Final Ranking:"
 
     with open(ranked_txt, 'r') as fd:

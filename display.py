@@ -1,17 +1,5 @@
-import argparse
-import glob
-import json
-import os
-import sys
-
-
-# 3rd party
-import numpy as np
+from photo import Photo
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-import math
-import exifread
-
 
 remaining = 0
 
